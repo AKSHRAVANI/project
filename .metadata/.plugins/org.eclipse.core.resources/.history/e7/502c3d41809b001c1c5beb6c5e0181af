@@ -1,0 +1,5 @@
+package com.abc.fundraising.model;
+
+public class Category {
+
+}

@@ -1,0 +1,13 @@
+package com.abc.fundraising.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.abc.fundraising.entity.CategoryEntity;
+
+public interface CategoryRepository extends JpaRepository<CategoryEntity,Integer> {	
+	
+	
+	public CategoryEntity findByCategoryName(String categoryName);
+	
+
+}

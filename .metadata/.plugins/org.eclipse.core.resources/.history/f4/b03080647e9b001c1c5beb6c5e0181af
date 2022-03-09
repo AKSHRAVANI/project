@@ -1,0 +1,5 @@
+package com.abc.fundraising.exception;
+
+public class CategoryNotFoundException {
+
+}

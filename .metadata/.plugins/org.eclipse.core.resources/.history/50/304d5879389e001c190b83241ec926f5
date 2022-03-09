@@ -1,0 +1,112 @@
+package com.abc.fundraising;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.verification.VerificationMode;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.repository.CrudRepository;
+
+import com.abc.fundraising.entity.CategoryEntity;
+import com.abc.fundraising.exception.CategoryNotFoundException;
+import com.abc.fundraising.model.Category;
+import com.abc.fundraising.repository.CategoryRepository;
+import com.abc.fundraising.service.CategoryService;
+import com.abc.fundraising.service.CategoryServiceImpl;
+import com.abc.fundraising.util.EntityModelUtil;
+
+@SpringBootTest
+public class ClassServiceTest {
+	
+
+	@InjectMocks
+	private CategoryService categoryService = new CategoryServiceImpl();
+	
+	@Mock
+	private CategoryRepository categoryRepository;
+	
+	@Mock
+	private CategoryEntity categoryEntity;
+	
+	
+	@Test
+	public void testGetCategoryById() {
+		
+		Category category = new Category();
+		category.setCategoryId(1);
+		category.setCategoryName("dummyname");
+		
+		
+		Optional<CategoryEntity> optionalCategory = Optional.of(category);
+		
+		int categoryId = 2;
+		
+		when(categoryRepository.findById(2)).thenReturn(optionalCategory);
+		
+		Category existingCategory = categoryService.getCategoryById(categoryId);
+		
+		assertEquals("dummyname", existingCategory.getCategoryName());			
+		
+	}
+	
+	@Test
+	public void testGetCategoryByIdNotFound() {
+		
+	    int categoryId = 200;	    
+	        
+	    when(categoryRepository.findById(categoryId)).thenThrow(CategoryNotFoundException.class);
+		    
+	    assertThrows(CategoryNotFoundException.class,()->categoryService.getCategoryById(categoryId));
+	    
+	}
+	
+	@Test
+	public void testSaveCategory() {
+		
+		Category category = new Category();
+		category.setCategoryId(10);
+		category.setCategoryName("dummyname");
+		
+		
+		when(categoryRepository.save(EntityModelUtil.categoryModelToEntity(category))).thenReturn(categoryEntity);
+		
+		Category newCategory = categoryService.saveCategory(EntityModelUtil.categoryEntityToModel(categoryEntity));
+		
+		//assertEquals(category.getCategoryName(), newCategory.getCategoryName());
+		
+		verify(categoryRepository,times(1)).save(EntityModelUtil.categoryModelToEntity(category));		
+		
+	}
+	
+	@Test
+	public void deleteCategoryById() {
+		
+		int categoryId = 222;
+		
+		CategoryEntity category = new CategoryEntity();
+		
+		category.setCategoryId(222);
+		category.setCategoryName("dummyname");
+		
+		Optional<CategoryEntity> optionalCategory = Optional.of(category);
+		
+		when(categoryRepository.findById(222)).thenReturn(optionalCategory);	
+			
+		categoryService.deleteCategory(category.getCategoryId());
+		
+		verify(categoryRepository,times(1)).deleteById(categoryId);	
+		
+	
+		
+	}
+
+	
+}

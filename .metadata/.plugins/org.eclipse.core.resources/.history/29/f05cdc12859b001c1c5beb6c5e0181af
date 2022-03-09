@@ -1,0 +1,5 @@
+package com.abc.fundraising.controller;
+
+public class CategoryController {
+
+}

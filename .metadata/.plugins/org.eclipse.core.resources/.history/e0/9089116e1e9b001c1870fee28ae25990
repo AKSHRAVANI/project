@@ -1,0 +1,5 @@
+package com.abc.fundraising.repository;
+
+public interface CategoryRepository {
+
+}
